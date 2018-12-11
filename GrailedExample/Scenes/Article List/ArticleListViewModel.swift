@@ -97,7 +97,7 @@ final class ArticleListViewModel {
                 _articleListSections.value.append(loadingSection)
             })
 
-        /// Fetch Next Page Observable
+        /// Fetch Page Observable
         Observable.merge(initalLoadPath, nextPagePath)
             .flatMapLatest { path in
                 _network.fetchAll(for: path)

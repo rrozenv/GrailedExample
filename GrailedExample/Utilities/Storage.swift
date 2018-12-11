@@ -1,8 +1,8 @@
 //
-//  Cache.swift
+//  Storage.swift
 //  GrailedExample
 //
-//  Created by Robert Rozenvasser on 12/9/18.
+//  Created by Robert Rozenvasser on 12/10/18.
 //  Copyright © 2018 Cluk Labs. All rights reserved.
 //
 
@@ -43,12 +43,12 @@ public class Storage {
     
     /// Used to retrieve decodable objects
     public static func retrieve<T: Decodable>(_ fileName: String? = nil,
-                                       from directory: Directory = .documents,
-                                       as type: T.Type) -> Maybe<T> {
+                                              from directory: Directory = .documents,
+                                              as type: T.Type) -> Maybe<T> {
         return Maybe<T>.create { (observer) -> Disposable in
             let url = getURL(for: directory)
                 .appendingPathComponent("\(T.self).type.\(fileName ?? "")", isDirectory: false)
-
+            
             guard FileManager.default.fileExists(atPath: url.path) else {
                 debugPrint("File does not exist for \(T.self) storage")
                 observer(MaybeEvent.completed)

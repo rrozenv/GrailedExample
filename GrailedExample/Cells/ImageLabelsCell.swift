@@ -12,7 +12,7 @@ import UIKit
 final class ImageLabelsCell: UITableViewCell {
     
     // MARK: - Properties
-    let imageLabelsView = ImageLabelsView()
+    private let imageLabelsView = ImageLabelsView()
 
     // MARK: - Initialization
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {

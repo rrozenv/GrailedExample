@@ -24,7 +24,6 @@ final class SearchListViewModel {
     // MARK: - Input
     struct Input {
         let viewDidLoad$: Observable<Void>
-        let didSelectCell$: Observable<IndexPath>
     }
     
     // MARK: - Output

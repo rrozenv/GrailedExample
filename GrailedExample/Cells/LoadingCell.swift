@@ -12,8 +12,8 @@ import UIKit
 final class LoadingCell: UITableViewCell {
     
     // MARK: - Properties
-    let containerView = UIView()
-    let loadingView = UIActivityIndicatorView(style: .gray)
+    private let containerView = UIView()
+    private let loadingView = UIActivityIndicatorView(style: .gray)
     
     // MARK: - Initialization
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -26,18 +26,21 @@ final class LoadingCell: UITableViewCell {
         commonInit()
     }
     
+    func configure() {
+        loadingView.startAnimating()
+    }
+    
     private func commonInit() {
         contentView.backgroundColor = UIColor.white
         
         // Container View
         contentView.addSubview(containerView)
         containerView.fillSuperview()
-        containerView.anchor(heightConstant: 90)
-        
+
         // Loading View
         containerView.addSubview(loadingView)
-        loadingView.anchorCenterSuperview()
-        loadingView.startAnimating()
+        loadingView.anchorCenterXToSuperview()
+        loadingView.anchor(contentView.topAnchor, bottom: contentView.bottomAnchor, topConstant: 15, bottomConstant: 15)
     }
     
 }

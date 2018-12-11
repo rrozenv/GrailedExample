@@ -57,9 +57,15 @@ extension ImageLabelsView {
     
     private func setupConstraints() {
         // Image View
-        imageView.anchor(widthConstant: 80, heightConstant: 80)
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.widthAnchor.constraint(equalToConstant: 80).isActive = true
+        let imageHeightAnchor = imageView.heightAnchor.constraint(equalToConstant: 80)
+        imageHeightAnchor.priority = UILayoutPriority(999)
+        imageHeightAnchor.isActive = true
         
         // Lables Stack View
+        headerLabel.numberOfLines = 0
+        subLabel.numberOfLines = 0
         let labelsSv = UIStackView(arrangedSubviews: [headerLabel, subLabel])
         labelsSv.axis = .vertical
         labelsSv.spacing = 10

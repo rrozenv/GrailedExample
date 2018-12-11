@@ -26,7 +26,7 @@ final class SearchListViewController: UIViewController, BindableType {
     required init?(coder aDecoder: NSCoder) { return nil }
     
     // MARK: - View Properties
-    private let tableView = UITableView(frame: CGRect.zero, style: .grouped)
+    private let tableView = RxTableView(frame: CGRect.zero, style: .grouped)
     private let loadingView = LoadingView(frame: CGRect(x: 0, y: 0, width: 50, height: 50))
     
     // MARK: - Rx Properties
@@ -45,15 +45,8 @@ final class SearchListViewController: UIViewController, BindableType {
     func bindViewModel() {
         /// Inputs
         let viewDidLoad$ = Observable.just(())
-        
-        let didSelectCell$ = tableView.rx
-            .itemSelected.asObservable()
-            .do(onNext: { [weak self] in
-                self?.tableView.deselectRow(at: $0, animated: true)
-            })
 
-        let inputs = SearchListViewModel.Input(viewDidLoad$: viewDidLoad$,
-                                                didSelectCell$: didSelectCell$)
+        let inputs = SearchListViewModel.Input(viewDidLoad$: viewDidLoad$)
         
         /// Outputs
         let outputs = viewModel.transform(input: inputs)
@@ -73,8 +66,7 @@ final class SearchListViewController: UIViewController, BindableType {
         
         outputs.error$
             .drive(onNext: { [weak self] in
-                guard let `self` = self else { return }
-                self.display(error: $0)
+                self?.display(error: $0)
             })
             .disposed(by: disposeBag)
     }
@@ -85,9 +77,9 @@ final class SearchListViewController: UIViewController, BindableType {
 extension SearchListViewController {
     
     private func setupTableView() {
-        tableView.separatorStyle = .singleLine
         tableView.register(ImageLabelsCell.self)
-        
+        tableView.separatorStyle = .singleLine
+   
         view.addSubview(tableView)
         tableView.fillSuperview()
     }

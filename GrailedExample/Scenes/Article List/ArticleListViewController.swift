@@ -26,7 +26,7 @@ final class ArticleListViewController: UIViewController, BindableType {
     required init?(coder aDecoder: NSCoder) { return nil }
     
     // MARK: - View Properties
-    private let tableView = UITableView(frame: CGRect.zero, style: .grouped)
+    private let tableView = RxTableView(frame: CGRect.zero, style: .grouped)
     
     // MARK: - Rx Properties
     private let disposeBag = DisposeBag()
@@ -42,7 +42,7 @@ final class ArticleListViewController: UIViewController, BindableType {
                 }
             case .loading:
                 return table.dequeueReusableCell(of: LoadingCell.self, for: idxPath) { cell in
-                    cell.loadingView.startAnimating()
+                    cell.configure()
                 }
             }
         })
@@ -65,11 +65,7 @@ final class ArticleListViewController: UIViewController, BindableType {
             .willDisplayCell.asObservable()
             .map { $0.indexPath }
         
-        let didSelectCell$ = tableView.rx
-            .itemSelected.asObservable()
-            .do(onNext: { [weak self] in
-                self?.tableView.deselectRow(at: $0, animated: true)
-            })
+        let didSelectCell$ = tableView.rx.itemSelected.asObservable()
         
         let inputs = ArticleListViewModel.Input(viewDidLoad$: viewDidLoad$,
                                                 willDisplayCell$: willDisplayCell$,
@@ -84,8 +80,7 @@ final class ArticleListViewController: UIViewController, BindableType {
         
         outputs.error$
             .drive(onNext: { [weak self] in
-                guard let `self` = self else { return }
-                self.display(error: $0)
+                self?.display(error: $0)
             })
             .disposed(by: disposeBag)
     }
@@ -96,10 +91,10 @@ final class ArticleListViewController: UIViewController, BindableType {
 extension ArticleListViewController {
     
     private func setupTableView() {
-        tableView.separatorStyle = .singleLine
         tableView.register(ImageLabelsCell.self)
         tableView.register(LoadingCell.self)
-        
+        tableView.separatorStyle = .singleLine
+
         view.addSubview(tableView)
         tableView.fillSuperview()
     }

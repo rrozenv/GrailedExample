@@ -8,6 +8,7 @@
 
 import Foundation
 import UIKit
+import RxSwift
 
 extension UITableViewCell {
     static var identifier: String { return String(describing: self) }
@@ -24,5 +25,22 @@ extension UITableView {
     
     func register(_ cell: UITableViewCell.Type) {
         register(cell, forCellReuseIdentifier: cell.identifier)
+    }
+}
+
+class RxTableView: UITableView {
+    private let disposeBag = DisposeBag()
+    
+    override init(frame: CGRect, style: UITableView.Style) {
+        super.init(frame: frame, style: style)
+        rx.itemSelected.asObservable()
+            .subscribe(onNext: { [weak self] in
+                 self?.deselectRow(at: $0, animated: true)
+            })
+            .disposed(by: disposeBag)
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
 }
