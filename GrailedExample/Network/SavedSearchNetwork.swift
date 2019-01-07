@@ -11,12 +11,14 @@ import RxSwift
 
 protocol SavedSearchNetworkable {
     func fetchAll() -> Observable<SavedSearchResult>
+    func createNew() -> Observable<Void>
 }
 
 final class SavedSearchNetwork: SavedSearchNetworkable {
     
     static let shared = SavedSearchNetwork(network: Network<SavedSearchResult>(Constants.baseUrl))
-    
+    static let savedSearchStoreChanged = Notification.Name("SavedSearchStoreChanged")
+
     // MARK: - Initalization
     private let network: Network<SavedSearchResult>
     
@@ -34,6 +36,16 @@ final class SavedSearchNetwork: SavedSearchNetworkable {
                     .concat(Observable.just(result))
         }
         return cachedResult.concat(networkResult)
+    }
+    
+    func createNew() -> Observable<Void> {
+        return Observable.of(())
+            .do(onNext: {
+                NotificationCenter.default.post(name: SavedSearch.created,
+                                                object: SavedSearch(id: 1001, name: "New", image_url: ""),
+                                                userInfo: nil)
+            })
+            .mapToVoid()
     }
 
 }

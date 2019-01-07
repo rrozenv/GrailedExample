@@ -1,0 +1,6 @@
+module Pods_GrailedExampleTests [system] {
+  umbrella header "Pods-GrailedExampleTests-umbrella.h"
+
+  export *
+  module * { export * }
+}

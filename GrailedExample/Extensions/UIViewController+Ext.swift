@@ -7,6 +7,46 @@
 //
 
 import UIKit
+import RxSwift
+import RxCocoa
+
+class RxViewController: UIViewController {
+    
+    // MARK: - Properties
+    let disposeBag = DisposeBag()
+    let isFirstLoad = BehaviorRelay(value: true)
+    let isBeingDisplayed = BehaviorRelay(value: false)
+    
+    // MARK: - Lifecycle
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        isFirstLoad.accept(false)
+        isBeingDisplayed.accept(true)
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        isBeingDisplayed.accept(false)
+    }
+    
+    // MARK: View Model Binding
+    /// Should override
+    func bindViewModel() {
+        /** MARK: - Theme Updates **/
+        NotificationCenter.default.rx.notification(.themeChanged)
+            .subscribe(onNext: { [weak self] _ in
+                self?.didChangeTheme()
+            })
+            .disposed(by: disposeBag)
+    }
+    
+    // MARK: Theme Update
+    /// Should override
+    func didChangeTheme() {
+        updateNavgationBarAppearance()
+    }
+    
+}
 
 extension UIViewController {
     
@@ -50,6 +90,41 @@ extension UIViewController {
         DispatchQueue.main.async {
             self.present(alertVc, animated: true, completion: nil)
         }
+    }
+    
+    func updateNavgationBarAppearance() {
+        navigationController?.isNavigationBarHidden = true
+        navigationController?.isNavigationBarHidden = false
+    }
+    
+}
+
+extension UINavigationBar {
+    
+    func clear() {
+        shadowImage = UIImage()
+        setBackgroundImage(UIImage(), for: .default)
+        backgroundColor = .clear
+        barTintColor = .clear
+        isTranslucent = true
+        UIApplication.shared.statusBarView?.backgroundColor = .clear
+    }
+    
+    func reset(to color: UIColor) {
+        shadowImage = UIImage()
+        setBackgroundImage(UIImage(), for: .default)
+        backgroundColor = color
+        barTintColor = color
+        isTranslucent = false
+        UIApplication.shared.statusBarView?.backgroundColor = color
+    }
+    
+}
+
+extension UIApplication {
+    
+    var statusBarView: UIView? {
+        return value(forKey: "statusBar") as? UIView
     }
     
 }

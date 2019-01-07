@@ -19,6 +19,13 @@ struct ArticleViewModel {
     let title: String
     let author: String
     let url: URL?
+    
+    init(_ article: Article) {
+        self.article = article
+        self.title = article.title.capitalized
+        self.author = article.author.capitalized
+        self.url = URL(string: article.url)
+    }
 }
 
 final class ArticleListViewModel {
@@ -37,7 +44,7 @@ final class ArticleListViewModel {
     }
     
     // MARK: - Constants
-    private struct Constants {
+    struct Constants {
         static let loadingSectionTitle = "Loading"
         static let initalPath = "api/articles/ios_index"
     }
@@ -49,6 +56,9 @@ final class ArticleListViewModel {
     init(network: ArticlesNetworkable = ArticlesNetwork.shared) {
         self.network = network
     }
+    
+    // MARK: - Coordinator Outputs
+    let displaySelectedArticle$ = PublishSubject<ArticleViewModel>()
     
     // MARK: - Transformation
     func transform(input: Input) -> Output {
@@ -69,16 +79,9 @@ final class ArticleListViewModel {
                 && !_activityTracker.isLoading
         }
         
-        let mapArticleToViewModel: (Article) -> ArticleViewModel = {
-            return ArticleViewModel(article: $0,
-                                    title: $0.title.capitalized,
-                                    author: $0.author.capitalized,
-                                    url: URL(string: $0.url))
-        }
-        
         let createSection: (ArticlesResult) -> ArticleListSection = {
             return ArticleListSection(title: UUID().uuidString,
-                                      items: $0.data.map { ArticleListRow.article(mapArticleToViewModel($0)) })
+                                      items: $0.data.map { ArticleListRow.article(ArticleViewModel($0)) })
         }
         
         /// Inital Load Trigger
@@ -113,14 +116,15 @@ final class ArticleListViewModel {
         
         /// Did Select Cell Observable
         input.didSelectCell$
-            .map { idxPath -> URL? in
+            .map { idxPath -> ArticleViewModel? in
                 switch  _articleListSections.value[idxPath.section].items[idxPath.row] {
-                case .article(let article): return article.url
+                case .article(let article): return article
                 default: return nil
                 }
             }
             .filterNil()
-            .subscribe(onNext: { UIApplication.shared.open($0, options: [:]) })
+            .bind(to: displaySelectedArticle$)
+//            .subscribe(onNext: { UIApplication.shared.open($0, options: [:]) })
             .disposed(by: disposeBag)
 
         return Output(articleListSections$: _articleListSections.asDriver(),

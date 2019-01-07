@@ -13,43 +13,35 @@ import Kingfisher
 final class ImageLabelsView: UIView {
     
     // MARK: - Properties
-    let style: Style
+    var style: Style
     let imageView = UIImageView()
     let headerLabel = UILabel()
     let subLabel = UILabel()
     
     // MARK: - Initalization
-    init(style: Style = Style()) {
+    init(style: Style = ImageLabelsView.Style.defaultStyle) {
         self.style = style
         super.init(frame: .zero)
         setupConstraints()
     }
     
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
+    required init?(coder aDecoder: NSCoder) { return nil }
     
     // MARK: - Configuration
-    func configure(headerText: String? = nil,
-                   subText: String? = nil,
-                   imageUrl: URL? = nil) {
-        if let headerText = headerText {
-           headerLabel.attributedText = NSAttributedString(string: headerText, attributes: style.headerLabel)
+    var headerText: String = "" {
+        didSet {
+            headerLabel.attributedText = NSAttributedString(string: headerText,
+                                                            attributes: style.headerLabel)
         }
-        
-        if let subText = subText {
-            subLabel.attributedText = NSAttributedString(string: subText, attributes: style.subLabel)
-        }
-        
-        if let imageUrl = imageUrl {
-            imageView.kf.setImage(with: Constants.imageResizeUrl(imageUrl.absoluteString, width: 200))
-        }
-        
-        headerLabel.isHidden = headerText == nil
-        subLabel.isHidden = subText == nil
-        imageView.isHidden = imageUrl == nil
     }
-
+    
+    var subTitleText: String = "" {
+        didSet {
+            subLabel.attributedText = NSAttributedString(string: subTitleText,
+                                                         attributes: style.subLabel)
+        }
+    }
+    
 }
 
 // MARK: - Constraints
@@ -90,12 +82,15 @@ extension ImageLabelsView {
         var headerLabel: [NSAttributedString.Key: Any]
         var subLabel: [NSAttributedString.Key: Any]
         
-        init(headerLabel: [NSAttributedString.Key: Any] =
-            textAttributes(.black, UIFont.systemFont(ofSize: 14), .left),
-             subLabel: [NSAttributedString.Key: Any] =
-            textAttributes(.black, UIFont.systemFont(ofSize: 12), .left)) {
+        init(headerLabel: [NSAttributedString.Key: Any],
+             subLabel: [NSAttributedString.Key: Any]) {
             self.headerLabel = headerLabel
             self.subLabel = subLabel
+        }
+        
+        static var defaultStyle: Style {
+            return Style(headerLabel: Theme.current.primaryTextAttributes,
+                         subLabel: Theme.current.primaryTextAttributes)
         }
     }
     

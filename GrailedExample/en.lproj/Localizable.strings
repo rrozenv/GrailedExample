@@ -1,0 +1,9 @@
+/* 
+  Localizable.strings
+  GrailedExample
+
+  Created by Robert Rozenvasser on 12/23/18.
+  Copyright © 2018 Cluk Labs. All rights reserved.
+*/
+
+"Article Count: %d" = "Article Count: %d";

@@ -11,7 +11,7 @@ import RxSwift
 import RxCocoa
 import RxDataSources
 
-final class ArticleListViewController: UIViewController, BindableType {
+final class ArticleListViewController: RxViewController, BindableType {
     
     // MARK: - Dependenices
     var viewModel: ArticleListViewModel
@@ -28,17 +28,14 @@ final class ArticleListViewController: UIViewController, BindableType {
     // MARK: - View Properties
     private let tableView = RxTableView(frame: CGRect.zero, style: .grouped)
     
-    // MARK: - Rx Properties
-    private let disposeBag = DisposeBag()
-    
     // MARK: - Data Source
     private lazy var dataSource = RxTableViewSectionedAnimatedDataSource<ArticleListSection>(
         decideViewTransition: { _, _, _ in .reload },
-        configureCell: { (dataSource, table, idxPath, viewModel) in
+        configureCell: { [weak self] (dataSource, table, idxPath, viewModel) in
             switch dataSource[idxPath] {
             case .article(let article):
                 return table.dequeueReusableCell(of: ImageLabelsCell.self, for: idxPath) { cell in
-                    cell.configure(with: article)
+                   self?.configure(cell: cell, for: article)
                 }
             case .loading:
                 return table.dequeueReusableCell(of: LoadingCell.self, for: idxPath) { cell in
@@ -46,7 +43,7 @@ final class ArticleListViewController: UIViewController, BindableType {
                 }
             }
         })
-
+    
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -54,35 +51,93 @@ final class ArticleListViewController: UIViewController, BindableType {
         setupTableView()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationItem.title = LocalizeableString.articles.localized
+        navigationController?.navigationBar.prefersLargeTitles = true
+    }
+    
     deinit { debugPrint("\(type(of: self)) deinit") }
     
     // MARK: - View Model binding
-    func bindViewModel() {
-        /// Inputs
+    override func bindViewModel() {
+        super.bindViewModel()
+        
+        tableView.rx.setDelegate(self)
+            .disposed(by: disposeBag)
+        
+    /** MARK: - Inputs **/
+        
+        /// Triggers on `viewDidLoad`
         let viewDidLoad$ = Observable.just(())
         
+        /// Triggers on `willDisplayCell`
         let willDisplayCell$ = tableView.rx
             .willDisplayCell.asObservable()
             .map { $0.indexPath }
         
+        /// Triggers on `didSelectCell`
         let didSelectCell$ = tableView.rx.itemSelected.asObservable()
         
+        /// Final Inputs
         let inputs = ArticleListViewModel.Input(viewDidLoad$: viewDidLoad$,
                                                 willDisplayCell$: willDisplayCell$,
                                                 didSelectCell$: didSelectCell$)
         
-        /// Outputs
+    /** MARK: - Outputs **/
+        
         let outputs = viewModel.transform(input: inputs)
         
+        /// Displays article sections in tableview
         outputs.articleListSections$
             .drive(tableView.rx.items(dataSource: dataSource))
             .disposed(by: disposeBag)
         
+        /// Displays error
         outputs.error$
             .drive(onNext: { [weak self] in
                 self?.display(error: $0)
             })
             .disposed(by: disposeBag)
+    }
+    
+    override func didChangeTheme() {
+        super.didChangeTheme()
+        tableView.reloadData()
+    }
+    
+    private func configure(cell: ImageLabelsCell, for article: ArticleViewModel) {
+        cell.contentView.backgroundColor = Theme.current.primaryBackgroundColor
+        cell.imageLabelsView.style = ImageLabelsView.Style.defaultStyle
+        
+        let configurator = ImageLabelsCellConfigurator<ArticleViewModel>(
+            headerKeyPath: \.title,
+            subtitleKeyPath: \.author,
+            imageUrlKeyPath: nil
+        )
+        
+        configurator.configure(cell, for: article)
+    }
+    
+}
+
+// MARK: - Table View Delegate
+extension ArticleListViewController: UITableViewDelegate {
+    
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        return nil
+    }
+    
+    func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        return nil
+    }
+    
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return CGFloat.leastNonzeroMagnitude
+    }
+    
+    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        return CGFloat.leastNonzeroMagnitude
     }
     
 }

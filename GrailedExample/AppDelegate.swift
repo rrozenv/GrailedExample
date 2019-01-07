@@ -22,6 +22,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         NetworkActivityLogger.shared.startLogging()
         NetworkActivityLogger.shared.level = .debug
         
+        Theme.current.apply()
+        
         appCoordinator = AppCoordinator(window: window!)
         appCoordinator.start()
             .subscribe()

@@ -14,3 +14,8 @@ struct Constants {
         return URL(string: "https://cdn.fs.grailed.com/AJdAgnqCST4iPtnUxiGtTz/rotate=deg:exif/rotate=deg:0/resize=width:\(width),fit:crop/output=format:jpg,compress:true,quality:95/\(imageUrl)")
     }
 }
+
+extension Notification.Name {
+    static let themeChanged = Notification.Name("themeChanged")
+}
+

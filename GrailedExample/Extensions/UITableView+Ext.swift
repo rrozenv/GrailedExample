@@ -33,14 +33,19 @@ class RxTableView: UITableView {
     
     override init(frame: CGRect, style: UITableView.Style) {
         super.init(frame: frame, style: style)
-        rx.itemSelected.asObservable()
-            .subscribe(onNext: { [weak self] in
-                 self?.deselectRow(at: $0, animated: true)
-            })
-            .disposed(by: disposeBag)
+        commonInit()
     }
     
     required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        super.init(coder: aDecoder)
+        commonInit()
+    }
+    
+    private func commonInit() {
+        rx.itemSelected.asObservable()
+            .subscribe(onNext: { [weak self] in
+                self?.deselectRow(at: $0, animated: true)
+            })
+            .disposed(by: disposeBag)
     }
 }

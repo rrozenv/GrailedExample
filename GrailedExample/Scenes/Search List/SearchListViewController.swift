@@ -11,27 +11,29 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-final class SearchListViewController: UIViewController, BindableType {
-    
+final class SearchListViewController: RxViewController, BindableType {
+
     // MARK: - Dependenices
     var viewModel: SearchListViewModel
+    private let tableViewEdgeInsets: UIEdgeInsets
     
     // MARK: - Initalization
-    init(viewModel: SearchListViewModel) {
+    init(viewModel: SearchListViewModel,
+         tableViewEdgeInsets: UIEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)) {
         self.viewModel = viewModel
+        self.tableViewEdgeInsets = tableViewEdgeInsets
         super.init(nibName: nil, bundle: nil)
         self.setViewModelBinding(model: viewModel)
     }
     
+    deinit { debugPrint("\(type(of: self)) deinit") }
+    
     required init?(coder aDecoder: NSCoder) { return nil }
-    
+
     // MARK: - View Properties
-    private let tableView = RxTableView(frame: CGRect.zero, style: .grouped)
+    private let tableView = RxTableView(frame: .zero, style: .grouped)
     private let loadingView = LoadingView(frame: CGRect(x: 0, y: 0, width: 50, height: 50))
-    
-    // MARK: - Rx Properties
-    private let disposeBag = DisposeBag()
-    
+
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -39,24 +41,37 @@ final class SearchListViewController: UIViewController, BindableType {
         setupTableView()
     }
     
-    deinit { debugPrint("\(type(of: self)) deinit") }
-    
     // MARK: - View Model binding
-    func bindViewModel() {
-        /// Inputs
-        let viewDidLoad$ = Observable.just(())
-
-        let inputs = SearchListViewModel.Input(viewDidLoad$: viewDidLoad$)
+    override func bindViewModel() {
+        super.bindViewModel()
         
-        /// Outputs
+        tableView.rx.setDelegate(self)
+            .disposed(by: disposeBag)
+        
+    /** MARK: - Inputs **/
+        
+        /// Triggers on `viewDidLoad`
+        let viewDidLoad$ = Observable.just(())
+        
+        /// Triggers on `didSelectCell`
+        let didSelectCell$ = tableView.rx.itemSelected.asObservable()
+
+        /// Final Inputs
+        let inputs = SearchListViewModel.Input(viewDidLoad$: viewDidLoad$,
+                                               didSelectCell$: didSelectCell$)
+        
+    /** MARK: - Outputs **/
+        
         let outputs = viewModel.transform(input: inputs)
         
+        /// Displays saved search table view
         outputs.savedSearchList$
-            .drive(tableView.rx.items(cellIdentifier: String(describing: ImageLabelsCell.self), cellType: ImageLabelsCell.self)) { row, savedSearch, cell in
-                cell.configure(with: savedSearch)
+            .drive(tableView.rx.items(cellIdentifier: String(describing: ImageLabelsCell.self), cellType: ImageLabelsCell.self)) { [weak self] _ , savedSearch, cell in
+                self?.configure(cell: cell, for: savedSearch)
             }
             .disposed(by: disposeBag)
         
+        /// Displays loading indicator
         outputs.loading$
             .drive(onNext: { [weak self] isLoading in
                 guard let `self` = self else { return }
@@ -64,6 +79,7 @@ final class SearchListViewController: UIViewController, BindableType {
             })
             .disposed(by: disposeBag)
         
+        /// Displays error
         outputs.error$
             .drive(onNext: { [weak self] in
                 self?.display(error: $0)
@@ -71,18 +87,63 @@ final class SearchListViewController: UIViewController, BindableType {
             .disposed(by: disposeBag)
     }
     
+    override func didChangeTheme() {
+        super.didChangeTheme()
+        tableView.reloadData()
+    }
+    
+    // MARK: Cell Configurator
+    private func configure(cell: ImageLabelsCell, for savedSearch: SavedSearchViewModel) {
+        cell.contentView.backgroundColor = Theme.current.primaryBackgroundColor
+        cell.imageLabelsView.style.headerLabel = textAttributes(.orange)
+        cell.imageLabelsView.imageView.kf.indicatorType = .activity
+        cell.imageLabelsView.imageView.contentMode = .scaleAspectFill
+        cell.imageLabelsView.imageView.clipsToBounds = true
+        
+        let config = ImageLabelsCellConfigurator<SavedSearchViewModel>(
+            headerKeyPath: \.name,
+            subtitleKeyPath: \.name,
+            imageUrlKeyPath: \.imageUrl
+        )
+        
+        config.configure(cell, for: savedSearch)
+    }
+    
+}
+
+// MARK: - Table View Delegate
+extension SearchListViewController: UITableViewDelegate {
+
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        return nil
+    }
+
+    func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        return nil
+    }
+
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return CGFloat.leastNonzeroMagnitude
+    }
+
+    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        return CGFloat.leastNonzeroMagnitude
+    }
+
 }
 
 // MARK: - View Setup
 extension SearchListViewController {
-    
+
     private func setupTableView() {
         tableView.register(ImageLabelsCell.self)
         tableView.separatorStyle = .singleLine
-   
+        tableView.contentInset = tableViewEdgeInsets
+        
         view.addSubview(tableView)
         tableView.fillSuperview()
     }
     
 }
+
 

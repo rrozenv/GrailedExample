@@ -9,10 +9,11 @@
 import Foundation
 import UIKit
 
+// MARK: - ImageLabelsCell
 final class ImageLabelsCell: UITableViewCell {
     
     // MARK: - Properties
-    private let imageLabelsView = ImageLabelsView()
+    let imageLabelsView = ImageLabelsView()
 
     // MARK: - Initialization
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -30,19 +31,30 @@ final class ImageLabelsCell: UITableViewCell {
         contentView.addSubview(imageLabelsView)
         imageLabelsView.fillSuperview()
     }
-
-    // MARK: - Configurations
-    func configure(with article: ArticleViewModel) {
-        imageLabelsView.style.subLabel = textAttributes(.blue, UIFont.systemFont(ofSize: 12), .left)
-        imageLabelsView.configure(headerText: article.title, subText: article.author)
-    }
     
-    func configure(with savedSearch: SavedSearchViewModel) {
-        imageLabelsView.style.headerLabel = textAttributes(.black, UIFont.systemFont(ofSize: 15), .left)
-        imageLabelsView.imageView.kf.indicatorType = .activity
-        imageLabelsView.imageView.contentMode = .scaleAspectFill
-        imageLabelsView.imageView.clipsToBounds = true
-        imageLabelsView.configure(headerText: savedSearch.name, imageUrl: savedSearch.imageUrl)
-    }
-
 }
+
+// MARK: - ImageLabelsCellConfigurator
+struct ImageLabelsCellConfigurator<Model> {
+    let headerKeyPath: KeyPath<Model, String>
+    let subtitleKeyPath: KeyPath<Model, String>
+    let imageUrlKeyPath: KeyPath<Model, URL?>?
+    
+    func configure(_ cell: ImageLabelsCell, for model: Model) {
+        let header = model[keyPath: headerKeyPath]
+        let subtitle = model[keyPath: subtitleKeyPath]
+        var imageUrl: URL?
+        if let imageUrlKeyPath = imageUrlKeyPath { imageUrl = model[keyPath: imageUrlKeyPath] }
+        
+        /// View Configuration
+        cell.imageLabelsView.headerText = header
+        cell.imageLabelsView.subTitleText = subtitle
+        cell.imageLabelsView.imageView.isHidden = imageUrl == nil
+        cell.imageLabelsView.headerLabel.isHidden = header == ""
+        cell.imageLabelsView.subLabel.isHidden = subtitle == ""
+        
+        guard imageUrl != nil else { return }
+        cell.imageLabelsView.imageView.kf.setImage(with: Constants.imageResizeUrl(imageUrl!.absoluteString, width: 200))
+    }
+}
+

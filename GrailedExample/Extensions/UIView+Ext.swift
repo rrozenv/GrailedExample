@@ -82,13 +82,26 @@ extension UIView {
     
 }
 
-func textAttributes(_ color: UIColor, _ font: UIFont, _ alignment: NSTextAlignment) -> [NSAttributedString.Key: Any] {
-    let paragraphStyle = NSMutableParagraphStyle()
-    paragraphStyle.alignment = alignment
+extension UIView {
     
-    return [
-        .foregroundColor: color,
-        .font: font,
-        .paragraphStyle: paragraphStyle
-    ]
+    func bounce() {
+        transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
+        
+        UIView.animate(withDuration: 1.0,
+                       delay: 0,
+                       usingSpringWithDamping: CGFloat(0.4),
+                       initialSpringVelocity: CGFloat(1.0),
+                       options: UIView.AnimationOptions.allowUserInteraction,
+                       animations: {
+                        self.transform = CGAffineTransform.identity
+        }, completion: nil)
+    }
+    
+    func dropShadow() {
+        layer.shadowColor = UIColor.lightGray.cgColor
+        layer.shadowOpacity = 0.4
+        layer.shadowOffset = CGSize(width: 0, height: 0)
+        layer.shadowRadius = 6.0
+    }
+    
 }
