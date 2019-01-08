@@ -1,0 +1,21 @@
+//
+//  Production.xcconfig
+//  GrailedExample
+//
+//  Created by Robert Rozenvasser on 1/7/19.
+//  Copyright © 2019 Cluk Labs. All rights reserved.
+//
+
+// Configuration settings file format documentation can be found at:
+// https://help.apple.com/xcode/#/dev745c5c974
+
+#include "Pods/Target Support Files/Pods-GrailedExample/Pods-GrailedExample.debug.xcconfig"
+
+#include "Pods/Target Support Files/Pods-GrailedExample/Pods-GrailedExample.release.xcconfig"
+
+// Server URL
+ROOT_URL = https:/$()/www.grailed.com
+
+// App Settings
+APP_NAME = GrailedExample (production)
+APP_BUNDLE_ID = com.clukapp.GrailedExample.prod

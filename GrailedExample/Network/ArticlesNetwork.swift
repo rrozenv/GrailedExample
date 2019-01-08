@@ -16,7 +16,7 @@ protocol ArticlesNetworkable {
 
 final class ArticlesNetwork: ArticlesNetworkable {
     
-    static let shared = ArticlesNetwork(network: Network<ArticlesResult>(Constants.baseUrl))
+    static let shared = ArticlesNetwork(network: Network<ArticlesResult>(Environment.rootURL.absoluteString))
     
     // MARK: - Initalization
     private let network: Network<ArticlesResult>

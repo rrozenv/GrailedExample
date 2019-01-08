@@ -1,19 +1,12 @@
 //
-//  String+Ext.swift
+//  Localizable.swift
 //  GrailedExample
 //
-//  Created by Robert Rozenvasser on 12/23/18.
-//  Copyright © 2018 Cluk Labs. All rights reserved.
+//  Created by Robert Rozenvasser on 1/7/19.
+//  Copyright © 2019 Cluk Labs. All rights reserved.
 //
 
 import Foundation
-
-extension String {
-    func localized(bundle: Bundle = .main, tableName: String = "Localizable") -> String {
-        return NSLocalizedString(self, tableName: tableName, value: self, comment: "")
-    }
-}
-
 
 protocol Localizable {
     var tableName: String { get }
@@ -33,3 +26,11 @@ enum LocalizeableString: String, Localizable {
         return "Localizable"
     }
 }
+
+extension String {
+    func localized(bundle: Bundle = .main, tableName: String = "Localizable") -> String {
+        return NSLocalizedString(self, tableName: tableName, value: self, comment: "")
+    }
+}
+
+

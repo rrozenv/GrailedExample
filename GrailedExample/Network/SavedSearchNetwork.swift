@@ -16,7 +16,7 @@ protocol SavedSearchNetworkable {
 
 final class SavedSearchNetwork: SavedSearchNetworkable {
     
-    static let shared = SavedSearchNetwork(network: Network<SavedSearchResult>(Constants.baseUrl))
+    static let shared = SavedSearchNetwork(network: Network<SavedSearchResult>(Environment.rootURL.absoluteString))
     static let savedSearchStoreChanged = Notification.Name("SavedSearchStoreChanged")
 
     // MARK: - Initalization

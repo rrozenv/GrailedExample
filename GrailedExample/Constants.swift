@@ -9,7 +9,6 @@
 import Foundation
 
 struct Constants {
-    static let baseUrl = "https://www.grailed.com"
     static func imageResizeUrl(_ imageUrl: String, width: Int) -> URL? {
         return URL(string: "https://cdn.fs.grailed.com/AJdAgnqCST4iPtnUxiGtTz/rotate=deg:exif/rotate=deg:0/resize=width:\(width),fit:crop/output=format:jpg,compress:true,quality:95/\(imageUrl)")
     }

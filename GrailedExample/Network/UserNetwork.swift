@@ -11,7 +11,7 @@ import RxCocoa
 
 final class UserNetwork {
     
-    static let shared = UserNetwork(network: Network<User>(Constants.baseUrl))
+    static let shared = UserNetwork(network: Network<User>(Environment.rootURL.absoluteString))
     private let _currentUser = BehaviorRelay<User?>(value: nil)
     var currentUser$: Observable<User> { return _currentUser.asObservable().filterNil() }
     
