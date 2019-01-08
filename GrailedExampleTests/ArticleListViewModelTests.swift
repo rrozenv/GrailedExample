@@ -7,6 +7,8 @@
 //
 
 import XCTest
+import RxTest
+import RxBlocking
 import RxSwift
 import RxCocoa
 @testable import GrailedExample

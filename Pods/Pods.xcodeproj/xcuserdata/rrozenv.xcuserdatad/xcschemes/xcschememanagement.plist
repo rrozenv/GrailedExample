@@ -19,12 +19,12 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
-		<key>Pods-GrailedExample.xcscheme</key>
+		<key>Pods-GrailedExample-GrailedExampleTests.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
 		</dict>
-		<key>Pods-GrailedExampleTests.xcscheme</key>
+		<key>Pods-GrailedExample.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
@@ -34,12 +34,7 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
-		<key>RxAtomic-framework.xcscheme</key>
-		<dict>
-			<key>isShown</key>
-			<false/>
-		</dict>
-		<key>RxAtomic-library.xcscheme</key>
+		<key>RxAtomic.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
@@ -49,12 +44,7 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
-		<key>RxCocoa-framework.xcscheme</key>
-		<dict>
-			<key>isShown</key>
-			<false/>
-		</dict>
-		<key>RxCocoa-library.xcscheme</key>
+		<key>RxCocoa.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
@@ -69,12 +59,7 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
-		<key>RxSwift-framework.xcscheme</key>
-		<dict>
-			<key>isShown</key>
-			<false/>
-		</dict>
-		<key>RxSwift-library.xcscheme</key>
+		<key>RxSwift.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>

@@ -9,6 +9,13 @@
 import Foundation
 import RxSwift
 
+protocol Modalable {
+    associatedtype T
+    static var created$: Observable<T> { get }
+    static var updated$: Observable<T> { get }
+    static var deleted$: Observable<T> { get }
+}
+
 // MARK: - SavedSearchResult
 struct SavedSearchResult: Codable {
     let data: [SavedSearch]
@@ -27,7 +34,7 @@ extension SavedSearch {
     static let deleted = Notification.Name("\(String(describing: SavedSearch.self)).deleted")
 }
 
-extension SavedSearch {
+extension SavedSearch: Modalable {
     static var created$: Observable<SavedSearch> {
         return NotificationCenter.default.rx.notification(SavedSearch.created)
         .map { $0.object as? SavedSearch }
