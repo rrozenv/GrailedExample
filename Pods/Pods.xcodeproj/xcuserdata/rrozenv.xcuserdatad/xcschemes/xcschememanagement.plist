@@ -19,12 +19,12 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
-		<key>Pods-GrailedExample.xcscheme</key>
+		<key>Pods-GrailedExample-GrailedExampleTests.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
 		</dict>
-		<key>Pods-GrailedExampleTests.xcscheme</key>
+		<key>Pods-GrailedExample.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>

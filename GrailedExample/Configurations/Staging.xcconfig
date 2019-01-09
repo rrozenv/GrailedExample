@@ -9,9 +9,9 @@
 // Configuration settings file format documentation can be found at:
 // https://help.apple.com/xcode/#/dev745c5c974
 
-#include "Pods/Target Support Files/Pods-GrailedExample/Pods-GrailedExample.debug.xcconfig"
+#include "Pods/Target Support Files/Pods-GrailedExample/Pods-GrailedExample.debug (staging).xcconfig"
 
-#include "Pods/Target Support Files/Pods-GrailedExample/Pods-GrailedExample.release.xcconfig"
+#include "Pods/Target Support Files/Pods-GrailedExample/Pods-GrailedExample.release (staging).xcconfig"
 
 // Server URL
 ROOT_URL = https:/$()/www.grailed.com
@@ -19,8 +19,6 @@ ROOT_URL = https:/$()/www.grailed.com
 // App Settings
 APP_NAME = GrailedExample (staging)
 APP_BUNDLE_ID = com.clukapp.GrailedExample.staging
-
-ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = $(inherited) YES
 
 // Network Activity Logger
 //NETWORK_ACTIVITY_LOGGER_LEVEL = debug

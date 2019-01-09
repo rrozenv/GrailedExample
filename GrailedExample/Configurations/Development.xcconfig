@@ -9,9 +9,9 @@
 // Configuration settings file format documentation can be found at:
 // https://help.apple.com/xcode/#/dev745c5c974
 
-#include "Pods/Target Support Files/Pods-GrailedExample/Pods-GrailedExample.debug.xcconfig"
+#include "Pods/Target Support Files/Pods-GrailedExample/Pods-GrailedExample.debug (development).xcconfig"
 
-#include "Pods/Target Support Files/Pods-GrailedExample/Pods-GrailedExample.release.xcconfig"
+#include "Pods/Target Support Files/Pods-GrailedExample/Pods-GrailedExample.release (development).xcconfig"
 
 // Server URL
 ROOT_URL = http:/$()/localhost:3000
