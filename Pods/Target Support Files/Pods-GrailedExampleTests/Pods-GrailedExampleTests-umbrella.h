@@ -11,6 +11,6 @@
 #endif
 
 
-FOUNDATION_EXPORT double Pods_GrailedExample_GrailedExampleTestsVersionNumber;
-FOUNDATION_EXPORT const unsigned char Pods_GrailedExample_GrailedExampleTestsVersionString[];
+FOUNDATION_EXPORT double Pods_GrailedExampleTestsVersionNumber;
+FOUNDATION_EXPORT const unsigned char Pods_GrailedExampleTestsVersionString[];
 

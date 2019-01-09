@@ -20,3 +20,6 @@ ROOT_URL = https:/$()/www.grailed.com
 APP_NAME = GrailedExample (production)
 APP_BUNDLE_ID = com.clukapp.GrailedExample.prod
 
+// Network Activity Logger
+//NETWORK_ACTIVITY_LOGGER_LEVEL = off
+

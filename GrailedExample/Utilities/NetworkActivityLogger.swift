@@ -9,7 +9,7 @@
 import Foundation
 import Alamofire
 
-public enum NetworkActivityLoggerLevel {
+public enum NetworkActivityLoggerLevel: String {
     /// Do not log requests or responses.
     case off
     

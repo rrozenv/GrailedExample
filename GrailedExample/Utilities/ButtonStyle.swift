@@ -22,6 +22,7 @@ class ButtonStyle {
     let font: UIFont?
     let contentEdgeInsets: UIEdgeInsets
     let cornerRadius: CGFloat
+    let adjustsImageWhenHighlighted: Bool
     
     init(title: String? = nil,
          titleEdgeInsets: UIEdgeInsets? = nil,
@@ -34,7 +35,8 @@ class ButtonStyle {
          image: UIImage? = nil,
          font: UIFont? = nil,
          contentEdgeInsets: UIEdgeInsets = .zero,
-         cornerRadius: CGFloat = 0.0) {
+         cornerRadius: CGFloat = 0.0,
+         adjustsImageWhenHighlighted: Bool = true) {
         self.title = title
         self.titleEdgeInsets = titleEdgeInsets
         self.enabledBackgroundColor = enabledBackgroundColor
@@ -47,6 +49,7 @@ class ButtonStyle {
         self.font = font
         self.contentEdgeInsets = contentEdgeInsets
         self.cornerRadius = cornerRadius
+        self.adjustsImageWhenHighlighted = adjustsImageWhenHighlighted
     }
 }
 
@@ -98,9 +101,7 @@ extension UIButton {
             setTitleColor(disabledTitleColor, for: .disabled)
         }
         
-        if style.selectedBackgroundColor == nil && style.selectedTitleColor == nil {
-             adjustsImageWhenHighlighted = false
-        }
+        adjustsImageWhenHighlighted = style.adjustsImageWhenHighlighted
     }
 }
 

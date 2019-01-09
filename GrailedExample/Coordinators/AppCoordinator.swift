@@ -13,6 +13,7 @@ class AppCoordinator: BaseCoordinator<Void> {
     
     private let window: UIWindow
     private let userNetwork: UserNetwork
+    private var rootCoordinator: BaseCoordinator<Void>?
     
     init(window: UIWindow, userNetwork: UserNetwork = UserNetwork.shared) {
         self.window = window
@@ -30,10 +31,10 @@ class AppCoordinator: BaseCoordinator<Void> {
             User.didLogInNotification$
         )
             .subscribe(onNext: { [unowned self] _ in
-                let homeCoordinator = HomeTabBarCoordinator(window: self.window)
-                homeCoordinator.start()
+                self.rootCoordinator = HomeTabBarCoordinator(window: self.window)
+                self.rootCoordinator?.start()
                     .subscribe()
-                    .disposed(by: homeCoordinator.disposeBag)
+                    .disposed(by: self.disposeBag)
             })
             .disposed(by: disposeBag)
 
@@ -44,10 +45,10 @@ class AppCoordinator: BaseCoordinator<Void> {
             User.didLogOutNotification$
         )
             .subscribe(onNext: { [unowned self] _ in
-                let loginCoordinator = LoginCoordinator(window: self.window)
-                loginCoordinator.start()
+                self.rootCoordinator = LoginCoordinator(window: self.window)
+                self.rootCoordinator?.start()
                     .subscribe()
-                    .disposed(by: loginCoordinator.disposeBag)
+                    .disposed(by: self.disposeBag)
             })
             .disposed(by: disposeBag)
 

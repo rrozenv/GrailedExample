@@ -14,9 +14,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "D1EB8047101DF34FC28780EDB9A47C1A"
-               BuildableName = "Pods_GrailedExample_GrailedExampleTests.framework"
-               BlueprintName = "Pods-GrailedExample-GrailedExampleTests"
+               BlueprintIdentifier = "134ABAC4D8ADE537ACFA8E5CB4D9DD3C"
+               BuildableName = "Pods_GrailedExampleTests.framework"
+               BlueprintName = "Pods-GrailedExampleTests"
                ReferencedContainer = "container:Pods.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -45,9 +45,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "D1EB8047101DF34FC28780EDB9A47C1A"
-            BuildableName = "Pods_GrailedExample_GrailedExampleTests.framework"
-            BlueprintName = "Pods-GrailedExample-GrailedExampleTests"
+            BlueprintIdentifier = "134ABAC4D8ADE537ACFA8E5CB4D9DD3C"
+            BuildableName = "Pods_GrailedExampleTests.framework"
+            BlueprintName = "Pods-GrailedExampleTests"
             ReferencedContainer = "container:Pods.xcodeproj">
          </BuildableReference>
       </MacroExpansion>

@@ -19,3 +19,6 @@ ROOT_URL = http:/$()/localhost:3000
 // App Settings
 APP_NAME = GrailedExample (dev)
 APP_BUNDLE_ID = com.clukapp.GrailedExample.dev
+
+// Network Activity Logger
+//NETWORK_ACTIVITY_LOGGER_LEVEL = debug

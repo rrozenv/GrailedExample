@@ -20,3 +20,8 @@ ROOT_URL = https:/$()/www.grailed.com
 APP_NAME = GrailedExample (staging)
 APP_BUNDLE_ID = com.clukapp.GrailedExample.staging
 
+ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = $(inherited) YES
+
+// Network Activity Logger
+//NETWORK_ACTIVITY_LOGGER_LEVEL = debug
+

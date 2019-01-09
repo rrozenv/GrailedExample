@@ -12,6 +12,7 @@ public enum Environment {
     enum Keys {
         enum Plist {
             static let rootURL = "ROOT_URL"
+            static let networkActivityLoggerLevel = "NETWORK_ACTIVITY_LOGGER_LEVEL"
         }
     }
     
@@ -31,5 +32,13 @@ public enum Environment {
         }
         return url
     }()
+    
+//    static let networkActivityLoggerLevel: NetworkActivityLoggerLevel = {
+//        guard let loggerLevelString =
+//            Environment.infoDictionary[Keys.Plist.networkActivityLoggerLevel] as? String,
+//            let loggerLevel = NetworkActivityLoggerLevel(rawValue: loggerLevelString) else { return .off }
+//        return loggerLevel
+//    }()
+    
 }
 

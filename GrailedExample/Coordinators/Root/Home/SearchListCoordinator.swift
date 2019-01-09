@@ -25,7 +25,7 @@ final class SearchListCoordinator: BaseCoordinator<Void> {
         
         let navigationProperties = NavigationProperties(navigationItem: navItem)
         
-        let pageViewController = SegmentedPageViewController(segmentedControlView: segmentView,segmentedControlPosition: .top, viewControllers: [searchListController, TestViewController(), TestViewController()], navigationProperties: navigationProperties)
+        let pageViewController = SegmentedPageViewController(segmentedControlView: segmentView, segmentedControlPosition: .top, viewControllers: [searchListController, TestViewController(), TestViewController()], navigationProperties: navigationProperties)
         
         rootNavigationController.pushViewController(pageViewController, animated: false)
         
@@ -50,10 +50,11 @@ extension SearchListCoordinator {
         let buttonStyles = ["Button 1", "Button 2", "Button 3"].map {
             ButtonStyle(title: $0,
                         enabledBackgroundColor: .white,
-                        //selectedBackgroundColor: .white,
                         enabledTitleColor: .black,
-                        selectedTitleColor: .red)
+                        selectedTitleColor: .red,
+                        adjustsImageWhenHighlighted: false)
         }
+        
         let underlineView = UIView()
         underlineView.backgroundColor = .red
         let segmentedControlView = SegmentedControlView(underlineView: underlineView)

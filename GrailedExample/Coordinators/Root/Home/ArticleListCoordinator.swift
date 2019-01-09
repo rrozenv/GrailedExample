@@ -11,32 +11,43 @@ import RxSwift
 
 final class ArticleListCoordinator: BaseCoordinator<Void> {
     
+    // MARK: - Properties
     private let rootNavigationController: UINavigationController
     
+    // MARK: - Initalization
     init(rootNavigationController: UINavigationController) {
         self.rootNavigationController = rootNavigationController
     }
     
     deinit { debugPrint("\(type(of: self)) deinit") }
     
+    // MARK: - Start
     override func start() -> Observable<Void> {
-        let vm = ArticleListViewModel()
-        let vc = ArticleListViewController(viewModel: vm)
-
-        vm.displaySelectedArticle$
-            .subscribe(onNext: { [weak self] _ in
-                self?.navigateToArticleDetail()
-            })
-            .disposed(by: disposeBag)
-
-        rootNavigationController.pushViewController(vc, animated: false)
-        
+        navigateToArticleList()
         return .never()
     }
+
+}
+
+// MARK: - Navigation
+extension ArticleListCoordinator {
     
-    private func navigateToArticleDetail() {
+    /// Article list (ROOT)
+    private func navigateToArticleList() {
+        let vm = ArticleListViewModel()
+        let vc = ArticleListViewController(viewModel: vm)
+        
+        vm.displaySelectedArticle$
+            .subscribe(onNext: { [weak self] in self?.navigateToArticleDetail($0) })
+            .disposed(by: disposeBag)
+        
+        rootNavigationController.pushViewController(vc, animated: false)
+    }
+    
+    /// Article detail
+    private func navigateToArticleDetail(_ article: ArticleViewModel) {
         let vc = TestViewController()
         rootNavigationController.pushViewController(vc, animated: true)
     }
-
+    
 }

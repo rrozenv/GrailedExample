@@ -123,6 +123,7 @@ final class ArticleListViewModel {
                 }
             }
             .filterNil()
+            .debug()
             .bind(to: displaySelectedArticle$)
 //            .subscribe(onNext: { UIApplication.shared.open($0, options: [:]) })
             .disposed(by: disposeBag)
