@@ -18,7 +18,14 @@ final class ArticleListCoordinator: BaseCoordinator<Void> {
     }
     
     override func start() -> Observable<Void> {
-        let vc = ArticleListViewController(viewModel: ArticleListViewModel())
+        let vm = ArticleListViewModel()
+        vm.didSelectArticle
+            .subscribe(onNext: {
+                print("did select article: \($0.title)")
+            })
+            .disposed(by: disposeBag)
+        
+        let vc = ArticleListViewController(viewModel: vm)
         rootNavigationController.pushViewController(vc, animated: false)
         return Observable.never()
     }

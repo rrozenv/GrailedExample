@@ -20,7 +20,13 @@ final class HomeTabBarCoordinator: BaseCoordinator<Void> {
 
     override func start() -> Observable<Void> {
         let tabBarController = UITabBarController()
-        tabBarController.viewControllers = [createArticlesNavController(), createSearchNavController()]
+        
+        let favoritesViewModel = FavoritesListViewModel()
+        let favoritesViewController = FavoritesListViewController(viewModel: favoritesViewModel)
+        let favoriteListNav = UINavigationController(rootViewController: favoritesViewController)
+        favoriteListNav.tabBarItem = UITabBarItem(tabBarSystemItem: .favorites, tag: 2)
+       
+        tabBarController.viewControllers = [createArticlesNavController(), createSearchNavController(), favoriteListNav]
         
         window.rootViewController = tabBarController
         window.makeKeyAndVisible()
@@ -45,5 +51,14 @@ final class HomeTabBarCoordinator: BaseCoordinator<Void> {
             .disposed(by: disposeBag)
         return searchListNav
     }
+    
+//    private func createFavoritesNavController() -> UINavigationController {
+//        let favoriteListNav = UINavigationController()
+//        favoriteListNav.tabBarItem = UITabBarItem(tabBarSystemItem: .favorites, tag: 2)
+//        coordinate(to: SearchListCoordinator(rootNavigationController: searchListNav))
+//            .subscribe()
+//            .disposed(by: disposeBag)
+//        return searchListNav
+//    }
 
 }

@@ -12,11 +12,14 @@ import RxSwiftExt
 
 protocol ArticlesNetworkable {
     func fetchAll(for path: String) -> Observable<ArticlesResult>
+    func favorite(article: Article) -> Observable<Article>
+    func fetchFavoritedArticles() -> Observable<[Article]>
 }
 
 final class ArticlesNetwork: ArticlesNetworkable {
     
     static let shared = ArticlesNetwork(network: Network<ArticlesResult>(Constants.baseUrl))
+    var favoritedArticles = [Article]()
     
     // MARK: - Initalization
     private let network: Network<ArticlesResult>
@@ -27,6 +30,21 @@ final class ArticlesNetwork: ArticlesNetworkable {
     
     func fetchAll(for path: String) -> Observable<ArticlesResult> {
         return network.getItem(path)
+    }
+    
+    func favorite(article: Article) -> Observable<Article> {
+        if let index = favoritedArticles.index(where: { $0.id == article.id }) {
+            favoritedArticles.remove(at: index)
+            NotificationCenter.default.post(name: Article.unfavorited, object: article)
+        } else {
+           favoritedArticles.append(article)
+           NotificationCenter.default.post(name: Article.favorited, object: article)
+        }
+        return .just(article)
+    }
+    
+    func fetchFavoritedArticles() -> Observable<[Article]> {
+       return .just(favoritedArticles)
     }
 
 }

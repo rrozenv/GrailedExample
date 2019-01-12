@@ -19,6 +19,16 @@ struct ArticleViewModel {
     let title: String
     let author: String
     let url: URL?
+    var isFavorited: Bool = false
+}
+
+extension ArticleViewModel {
+    init(_ article: Article, isFavorited: Bool = false) {
+        self.article = article
+        self.title = article.title
+        self.author = article.author
+        self.url = URL(string: article.url)
+    }
 }
 
 final class ArticleListViewModel {
@@ -50,6 +60,9 @@ final class ArticleListViewModel {
         self.network = network
     }
     
+    // MARK: - Coordinator Outputs
+    let didSelectArticle = PublishSubject<Article>()
+    
     // MARK: - Transformation
     func transform(input: Input) -> Output {
         
@@ -73,7 +86,8 @@ final class ArticleListViewModel {
             return ArticleViewModel(article: $0,
                                     title: $0.title.capitalized,
                                     author: $0.author.capitalized,
-                                    url: URL(string: $0.url))
+                                    url: URL(string: $0.url),
+                                    isFavorited: false)
         }
         
         let createSection: (ArticlesResult) -> ArticleListSection = {
@@ -113,14 +127,18 @@ final class ArticleListViewModel {
         
         /// Did Select Cell Observable
         input.didSelectCell$
-            .map { idxPath -> URL? in
+            .map { idxPath -> ArticleViewModel? in
                 switch  _articleListSections.value[idxPath.section].items[idxPath.row] {
-                case .article(let article): return article.url
+                case .article(let article): return article
                 default: return nil
                 }
             }
             .filterNil()
-            .subscribe(onNext: { UIApplication.shared.open($0, options: [:]) })
+            .flatMapLatest { article -> Observable<Article> in
+                return _network.favorite(article: article.article)
+            }
+            .subscribe()
+            //.subscribe(onNext: { UIApplication.shared.open($0, options: [:]) })
             .disposed(by: disposeBag)
 
         return Output(articleListSections$: _articleListSections.asDriver(),
